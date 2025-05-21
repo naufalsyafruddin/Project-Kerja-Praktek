@@ -10,6 +10,12 @@ public class EnemyPatrol : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    [Header("Crush Detection")]
+    public LayerMask platformLayer;
+    public float checkHeight = 0.1f;
+    public Vector2 checkSize = new Vector2(0.5f, 0.1f);
+    private bool isDead = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -24,7 +30,10 @@ public class EnemyPatrol : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDead) return;
+
         Patrol();
+        CheckIfCrushed();
     }
 
     void Patrol()
@@ -47,10 +56,29 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         // Ganti ke waypoint berikutnya jika sudah sampai
-        if (distance < 0.1f)
+        if (distance < 5f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
+    }
+
+    void CheckIfCrushed()
+    {
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * (GetComponent<Collider2D>().bounds.extents.y + checkHeight);
+        Collider2D hit = Physics2D.OverlapBox(checkPosition, checkSize, 0f, platformLayer);
+        if (hit != null)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        animator.SetBool("isWalking", false);
+        // Tambahkan animasi mati di sini jika ada, misalnya:
+        // animator.SetTrigger("Die");
+        Destroy(gameObject, 0.1f); // Delay kecil untuk animasi, bisa diubah
     }
 
     void OnDrawGizmos()
@@ -70,5 +98,14 @@ public class EnemyPatrol : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (GetComponent<Collider2D>() == null) return;
+
+        Gizmos.color = Color.yellow;
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * (GetComponent<Collider2D>().bounds.extents.y + checkHeight);
+        Gizmos.DrawWireCube(checkPosition, checkSize);
     }
 }
