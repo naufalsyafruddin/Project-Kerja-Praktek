@@ -2,34 +2,36 @@ using UnityEngine;
 
 public class ButtonController : MonoBehaviour
 {
-    public LaserController laser; // Laser yang dikontrol
-    private bool isHolding = false; // Status apakah tombol sedang ditekan
+    public LaserController laser; // Referensi ke laser yang akan dikontrol
+    private int playersOnButton = 0; // Jumlah player yang sedang menekan tombol
 
     void Update()
     {
-        if (isHolding)
+        if (playersOnButton > 0)
         {
-            laser.DeactivateLaser(); // Matikan laser saat tombol ditekan
+            laser.DeactivateLaser(); // Matikan laser kalau ada player di tombol
         }
         else
         {
-            laser.ActivateLaser(); // Aktifkan laser kembali saat tombol dilepas
+            laser.ActivateLaser(); // Aktifkan laser kembali kalau tombol kosong
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Jika pemain menyentuh tombol
+        if (collision.CompareTag("Player"))
         {
-            isHolding = true;
+            playersOnButton++;
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Jika pemain meninggalkan tombol
+        if (collision.CompareTag("Player"))
         {
-            isHolding = false;
+            playersOnButton--;
+            // Hindari nilai negatif karena bisa error jika tabrakan tidak konsisten
+            playersOnButton = Mathf.Max(playersOnButton, 0);
         }
     }
 }

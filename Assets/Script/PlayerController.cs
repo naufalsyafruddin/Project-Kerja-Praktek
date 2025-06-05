@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight = true;
 
+    // Tambahan: Nama input horizontal dan tombol lompat
+    public string horizontalInput = "Horizontal";
+    public string jumpButton = "Jump";
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anime = GetComponent<Animator>();
 
-        // Pastikan player menghadap kanan saat mulai
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x);
         transform.localScale = scale;
@@ -27,20 +30,20 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        DetectGround();     // Deteksi tanah dulu sebelum animasi
-        PlayerJump();       // Lompatan diatur setelah ground check
-        FlipTrigger();      // Balik arah player
-        UpdateAnimation();  // Update parameter animasi
+        DetectGround();
+        PlayerJump();
+        FlipTrigger();
+        UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
-        PlayerMovement();   // Gerakan player menggunakan physics
+        PlayerMovement();
     }
 
     void PlayerMovement()
     {
-        float x = Input.GetAxisRaw("Horizontal");
+        float x = Input.GetAxisRaw(horizontalInput);
         Vector3 movement = new Vector3(x * speed, rb.velocity.y, 0f);
         rb.velocity = movement;
     }
@@ -68,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerJump()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown(jumpButton) && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, 0f);
         }
@@ -79,20 +82,16 @@ public class PlayerController : MonoBehaviour
         if (groundDetector == null) return;
 
         isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
-
-        // Debug: Cek grounding
-        Debug.Log("Grounded: " + isGrounded);
     }
 
     void UpdateAnimation()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float horizontal = Input.GetAxisRaw(horizontalInput);
 
         anime.SetBool("Run", horizontal != 0);
         anime.SetBool("Jump", !isGrounded);
     }
 
-    // Debug gizmo untuk ground detector
     private void OnDrawGizmosSelected()
     {
         if (groundDetector != null)
