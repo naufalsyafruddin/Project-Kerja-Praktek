@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     public GameOverManager gameOverManager;  // Assign di inspector
     private bool isDead = false;
 
+    // Tambahan: Nama input horizontal dan tombol lompat
+    public string horizontalInput = "Horizontal";
+    public string jumpButton = "Jump";
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerMovement()
     {
-        float x = Input.GetAxisRaw("Horizontal");
+        float x = Input.GetAxisRaw(horizontalInput);
         Vector3 movement = new Vector3(x * speed, rb.velocity.y, 0f);
         rb.velocity = movement;
     }
@@ -75,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerJump()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown(jumpButton) && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, 0f);
         }
@@ -91,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAnimation()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float horizontal = Input.GetAxisRaw(horizontalInput);
 
         anime.SetBool("Run", horizontal != 0);
         anime.SetBool("Jump", !isGrounded);
