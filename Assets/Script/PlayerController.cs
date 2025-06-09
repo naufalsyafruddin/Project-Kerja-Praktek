@@ -13,9 +13,13 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight = true;
 
-    // Tambahan: Nama input horizontal dan tombol lompat
-    public string horizontalInput = "Horizontal";
-    public string jumpButton = "Jump";
+[Header("Game Over")]
+public GameOverManager gameOverManager;
+private bool isDead = false;
+
+public string horizontalInput = "Horizontal";
+public string jumpButton = "Jump";
+
 
     private void Start()
     {
@@ -30,14 +34,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        DetectGround();
-        PlayerJump();
-        FlipTrigger();
-        UpdateAnimation();
+if (isDead) return;  // Kalau sudah mati, tidak perlu update gerakan
+DetectGround();
+PlayerJump();
+FlipTrigger();
+UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
+        if (isDead) return;
         PlayerMovement();
     }
 
@@ -82,6 +88,8 @@ public class PlayerController : MonoBehaviour
         if (groundDetector == null) return;
 
         isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
+isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
+// Debug.Log("Grounded: " + isGrounded);
     }
 
     void UpdateAnimation()
@@ -98,6 +106,19 @@ public class PlayerController : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundDetector.position, 0.1f);
+        }
+    }
+
+    // DETEKSI MATI: Sentuh musuh atau laser
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (isDead) return;
+
+        if (other.CompareTag("LASER"))
+        {
+            isDead = true;
+            rb.velocity = Vector2.zero;  // Hentikan gerakan player saat mati
+            gameOverManager.ShowGameOver();
         }
     }
 }
