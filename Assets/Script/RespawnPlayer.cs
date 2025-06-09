@@ -18,28 +18,36 @@ public class PlayerRespawn : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Obstacle")) // Jika terkena obstacle selain laser
+        if (collision.CompareTag("Obstacle"))
         {
             StartCoroutine(Respawn());
         }
     }
 
-    IEnumerator Respawn()
+    // Jadikan public agar bisa dipanggil dari enemy patrol
+    public IEnumerator Respawn()
     {
         spriteRenderer.enabled = false;
         rb.velocity = Vector2.zero;
         rb.simulated = false;
+
+        // Disable collider untuk sementara supaya tidak langsung kena musuh saat respawn
+        Collider2D col = GetComponent<Collider2D>();
+        col.enabled = false;
+
         yield return new WaitForSeconds(respawnDelay);
 
         transform.position = respawnPoint != null ? respawnPoint.position : initialPosition;
         rb.simulated = true;
         spriteRenderer.enabled = true;
 
-        // Hidupkan kembali semua laser yang ada di dalam game
+        // Hidupkan collider kembali
+        col.enabled = true;
+
         LaserController[] lasers = FindObjectsOfType<LaserController>();
         foreach (LaserController laser in lasers)
         {
-            laser.ResetLaser(); // Memastikan laser kembali menyala
+            laser.ResetLaser();
         }
     }
 }

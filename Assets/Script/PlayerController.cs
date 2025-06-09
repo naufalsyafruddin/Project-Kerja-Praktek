@@ -13,13 +13,13 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight = true;
 
-    [Header("Game Over")]
-    public GameOverManager gameOverManager;  // Assign di inspector
-    private bool isDead = false;
+[Header("Game Over")]
+public GameOverManager gameOverManager;
+private bool isDead = false;
 
-    // Tambahan: Nama input horizontal dan tombol lompat
-    public string horizontalInput = "Horizontal";
-    public string jumpButton = "Jump";
+public string horizontalInput = "Horizontal";
+public string jumpButton = "Jump";
+
 
     private void Start()
     {
@@ -34,18 +34,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (isDead) return;  // Kalau sudah mati, tidak perlu update gerakan
-
-        DetectGround();
-        PlayerJump();
-        FlipTrigger();
-        UpdateAnimation();
+if (isDead) return;  // Kalau sudah mati, tidak perlu update gerakan
+DetectGround();
+PlayerJump();
+FlipTrigger();
+UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
         if (isDead) return;
-
         PlayerMovement();
     }
 
@@ -90,7 +88,8 @@ public class PlayerController : MonoBehaviour
         if (groundDetector == null) return;
 
         isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
-        // Debug.Log("Grounded: " + isGrounded);
+isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
+// Debug.Log("Grounded: " + isGrounded);
     }
 
     void UpdateAnimation()

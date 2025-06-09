@@ -10,6 +10,12 @@ public class EnemyPatrol : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    [Header("Crush Detection")]
+    public LayerMask platformLayer;
+    public float checkHeight = 0.1f;
+    public Vector2 checkSize = new Vector2(0.5f, 0.1f);
+    private bool isDead = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -24,7 +30,10 @@ public class EnemyPatrol : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDead) return;
+
         Patrol();
+        CheckIfCrushed();
     }
 
     void Patrol()
@@ -40,16 +49,44 @@ public class EnemyPatrol : MonoBehaviour
         float distance = Vector2.Distance(rb.position, target.position);
         animator.SetBool("isWalking", distance > 0.1f);
 
-        // Flip arah musuh
         if (direction.x != 0)
         {
             spriteRenderer.flipX = direction.x < 0;
         }
 
-        // Ganti ke waypoint berikutnya jika sudah sampai
-        if (distance < 0.1f)
+        if (distance < 5f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+        }
+    }
+
+    void CheckIfCrushed()
+    {
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * (GetComponent<Collider2D>().bounds.extents.y + checkHeight);
+        Collider2D hit = Physics2D.OverlapBox(checkPosition, checkSize, 0f, platformLayer);
+        if (hit != null)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        animator.SetBool("isWalking", false);
+        Destroy(gameObject, 0.1f);
+    }
+
+    // **Tambah fungsi trigger untuk bunuh player**
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            PlayerRespawn player = other.GetComponent<PlayerRespawn>();
+            if (player != null)
+            {
+                StartCoroutine(player.Respawn());
+            }
         }
     }
 
@@ -70,5 +107,14 @@ public class EnemyPatrol : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (GetComponent<Collider2D>() == null) return;
+
+        Gizmos.color = Color.yellow;
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * (GetComponent<Collider2D>().bounds.extents.y + checkHeight);
+        Gizmos.DrawWireCube(checkPosition, checkSize);
     }
 }
