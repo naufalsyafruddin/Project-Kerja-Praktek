@@ -49,13 +49,11 @@ public class EnemyPatrol : MonoBehaviour
         float distance = Vector2.Distance(rb.position, target.position);
         animator.SetBool("isWalking", distance > 0.1f);
 
-        // Flip arah musuh
         if (direction.x != 0)
         {
             spriteRenderer.flipX = direction.x < 0;
         }
 
-        // Ganti ke waypoint berikutnya jika sudah sampai
         if (distance < 5f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
@@ -76,9 +74,20 @@ public class EnemyPatrol : MonoBehaviour
     {
         isDead = true;
         animator.SetBool("isWalking", false);
-        // Tambahkan animasi mati di sini jika ada, misalnya:
-        // animator.SetTrigger("Die");
-        Destroy(gameObject, 0.1f); // Delay kecil untuk animasi, bisa diubah
+        Destroy(gameObject, 0.1f);
+    }
+
+    // **Tambah fungsi trigger untuk bunuh player**
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            PlayerRespawn player = other.GetComponent<PlayerRespawn>();
+            if (player != null)
+            {
+                StartCoroutine(player.Respawn());
+            }
+        }
     }
 
     void OnDrawGizmos()
