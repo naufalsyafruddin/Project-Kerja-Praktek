@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight = true;
 
+    [Header("Game Over")]
+    public GameOverManager gameOverManager;  // Assign di inspector
+    private bool isDead = false;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anime = GetComponent<Animator>();
 
-        // Pastikan player menghadap kanan saat mulai
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x);
         transform.localScale = scale;
@@ -27,15 +30,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        DetectGround();     // Deteksi tanah dulu sebelum animasi
-        PlayerJump();       // Lompatan diatur setelah ground check
-        FlipTrigger();      // Balik arah player
-        UpdateAnimation();  // Update parameter animasi
+        if (isDead) return;  // Kalau sudah mati, tidak perlu update gerakan
+
+        DetectGround();
+        PlayerJump();
+        FlipTrigger();
+        UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
-        PlayerMovement();   // Gerakan player menggunakan physics
+        if (isDead) return;
+
+        PlayerMovement();
     }
 
     void PlayerMovement()
@@ -79,9 +86,7 @@ public class PlayerController : MonoBehaviour
         if (groundDetector == null) return;
 
         isGrounded = Physics2D.OverlapCircle(groundDetector.position, 0.1f, whatIsGround);
-
-        // Debug: Cek grounding
-        Debug.Log("Grounded: " + isGrounded);
+        // Debug.Log("Grounded: " + isGrounded);
     }
 
     void UpdateAnimation()
@@ -92,13 +97,25 @@ public class PlayerController : MonoBehaviour
         anime.SetBool("Jump", !isGrounded);
     }
 
-    // Debug gizmo untuk ground detector
     private void OnDrawGizmosSelected()
     {
         if (groundDetector != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundDetector.position, 0.1f);
+        }
+    }
+
+    // DETEKSI MATI: Sentuh musuh atau laser
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (isDead) return;
+
+        if (other.CompareTag("LASER"))
+        {
+            isDead = true;
+            rb.velocity = Vector2.zero;  // Hentikan gerakan player saat mati
+            gameOverManager.ShowGameOver();
         }
     }
 }
