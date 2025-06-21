@@ -551,8 +551,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0657db169ae03458cd63aa044aa0f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointA: {x: 42.8, y: -24.61, z: 0}
-  pointB: {x: 42.8, y: -34.5, z: 0}
+  pointA: {x: 25.8103, y: -12.8, z: 0}
+  pointB: {x: 25.8103, y: -24.4, z: 0}
   speed: 5
 --- !u!61 &354495718
 BoxCollider2D:
@@ -1800,7 +1800,7 @@ GameObject:
   - component: {fileID: 1009790644}
   - component: {fileID: 1009790643}
   m_Layer: 0
-  m_Name: Tak berjudul169_20250423173443 (1)
+  m_Name: Saklar 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2626,7 +2626,7 @@ GameObject:
   - component: {fileID: 1218377003}
   - component: {fileID: 1218377002}
   m_Layer: 0
-  m_Name: Tak berjudul171_20250423173453
+  m_Name: Tombol tekan Bersama
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4139,7 +4139,7 @@ GameObject:
   - component: {fileID: 1677364988}
   - component: {fileID: 1677364987}
   m_Layer: 0
-  m_Name: Tak berjudul169_20250423173443
+  m_Name: Saklar 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4479,7 +4479,7 @@ GameObject:
   - component: {fileID: 1757476110}
   - component: {fileID: 1757476109}
   m_Layer: 0
-  m_Name: Tak berjudul171_20250423173453 (1)
+  m_Name: Tombol Tekan Bersama 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5464,8 +5464,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0657db169ae03458cd63aa044aa0f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointA: {x: 42.8, y: -24.61, z: 0}
-  pointB: {x: 42.8, y: -34.5, z: 0}
+  pointA: {x: 12.2002, y: -12.8, z: 0}
+  pointB: {x: 12.2002, y: -22.92, z: 0}
   speed: 5
 --- !u!61 &1941382996
 BoxCollider2D:
