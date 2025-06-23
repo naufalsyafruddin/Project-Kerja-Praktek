@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Project KP.sln"
+    "dotnet.defaultSolution": "Project-Kerja-Praktek.sln"
 }
