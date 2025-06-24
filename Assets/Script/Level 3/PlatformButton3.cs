@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PlatformButton : MonoBehaviour
+public class PlatformButton3 : MonoBehaviour
 {
-    public MovingPlatform platform;  // Referensi ke script MovingPlatform
+    public MovingPlatform3 platform;  // Referensi ke script MovingPlatform
     private bool isPlayerNearby = false;  // Status apakah pemain dekat tombol
 
     void Update()
